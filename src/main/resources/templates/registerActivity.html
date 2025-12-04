@@ -68,10 +68,7 @@
                 <div class="div-2">
                   <div class="label-wrapper">
                     <div class="div-2">
-                      <div class="label">活動説明</div>
-                    </div>
-                    <div class="elements-label">
-                      <div class="optional"></div>
+                      <div class="label">*活動説明</div>
                     </div>
                   </div>
                 </div>
@@ -187,7 +184,7 @@
       <div class="div-2">
         <div class="label-wrapper">
           <div class="div-2">
-            <div class="label-2" th:text="*{registerActivitySaveForm.clubName}"></div>
+            <div class="label-2" th:text="${registerActivitySaveForm.clubName}"></div>
           </div>
           <input type="hidden" name="clubName" th:value="${registerActivitySaveForm.clubName}" />
         </div>

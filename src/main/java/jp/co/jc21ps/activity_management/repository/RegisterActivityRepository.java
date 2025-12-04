@@ -36,23 +36,35 @@ public class RegisterActivityRepository {
         return responseEntity;
     }
 
+    // 最新の活動IDの次の値を取得
+    public String getNextActivityId() {
+        String sql = "SELECT nextval('activity_id_sequence') AS next_value";
+        Integer nextValue = jdbcTemplate.queryForObject(sql, Integer.class);
+        
+        // A + 7桁の数字形式に変換（例：11 → A0000011）
+        String activityId = ACTIVITY_ID_PREFIX + String.format("%07d", nextValue);
+        return activityId;
+    }
+
     // 入力値を登録
     public void saveActivity(RegisterActivitySaveEntity paramEntity) {
 
         String sql = """
                 INSERT INTO
-                    trn_activity (club_id,
+                    trn_activity (activity_id,
+                                  club_id,
                                   activity_name,
                                   activity_place,
                                   activity_start_time,
                                   activity_end_time,
                                   activity_description,
                                   max_participant)
-                VALUES (?,?,?,?,?,?,?)
+                VALUES (?,?,?,?,?,?,?,?)
                 """;
 
         // paramEntityから値をゲット
         Object[] paramList = {
+                paramEntity.getActivityId(),
                 paramEntity.getClubId(),
                 paramEntity.getActivityName(),
                 paramEntity.getActivityPlace(),

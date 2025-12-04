@@ -39,6 +39,10 @@ public class RegisterActivityService {
 
         RegisterActivitySaveEntity responseEntity = new RegisterActivitySaveEntity();
 
+        // 最新の活動IDの次の値を取得
+        String activityId = registerActivityRepository.getNextActivityId();
+        responseEntity.setActivityId(activityId);
+
         // dtoから時間のデータを取得
         String date = paramDto.getActivityDate();
         String startTime = paramDto.getActivityStartTime();

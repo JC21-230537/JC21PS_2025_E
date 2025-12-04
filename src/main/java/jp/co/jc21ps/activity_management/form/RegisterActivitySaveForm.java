@@ -22,30 +22,23 @@ public class RegisterActivitySaveForm {
     private String clubId;
 
     // 活動名
-    /*
-     * TODO ➊ activityNameに対し、バリデーションの条件を付与する
-     * 1.空白、nullを制御
-     * 2.入力値制御(ヒント : @○○(max = ○○, message = "{Size}")
-     */
-
+    @NotBlank(message = "{NotBlank}")
+    @Size(max = 30, message = "{Size}")
     private String activityName;
 
     // 活動日
-    /*
-     * TODO ➋ activityDateに対し、バリデーションの条件を付与する
-     * 1.空白、nullを制御 (ヒント : @○○(message = "{NotBlank}"))
-     * 2.日付形式の制御(ヒント : @○○(pattern = "{DateTimeFormat}")
-     */
-
+    @NotBlank(message = "{NotBlank}")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String activityDate;
 
-    // 過去の日付が入力されたとき
+    // 過去の日付が入力されたとき（明日以降であることをチェック）
     @AssertTrue(message = "{AssertTrue.activityDate}")
     public boolean isActivityDateValid() {
         try {
             if (activityDate != null) {
                 LocalDate inputDate = LocalDate.parse(activityDate);
-                return !inputDate.isBefore(LocalDate.now());
+                LocalDate tomorrow = LocalDate.now().plusDays(1);
+                return !inputDate.isBefore(tomorrow);
             }
             return true;
 
@@ -55,29 +48,17 @@ public class RegisterActivitySaveForm {
     }
 
     // 活動場所
-    /*
-     * TODO ➌ activityDateに対し、バリデーションの条件を付与する
-     * 1.空白、nullを制御 (ヒント : @○○(message = "{NotBlank}"))
-     * 2.入力値制御(ヒント : @○○(max = ○○, message = "{Size}")
-     */
-
+    @NotBlank(message = "{NotBlank}")
+    @Size(max = 30, message = "{Size}")
     private String activityPlace;
 
-    /*
-     * TODO ➍ activityStartTimeに対し、バリデーションの条件を付与する
-     * 1.空白、nullを制御 (ヒント : @○○(message = "{NotBlank}"))
-     */
     // 活動時間(自)
-
+    @NotBlank(message = "{NotBlank}")
     @Pattern(regexp = "^(?:[01]\\d|2[0-3]):[0-5]\\d$", message = "{Pattern.activityStartTime}") // hh:mm形式
     private String activityStartTime;
 
     // 活動時間(至)
-    /*
-     * TODO ➎ activityEndTimeに対し、バリデーションの条件を付与する
-     * 1.空白、nullを制御 (ヒント : @○○(message = "{NotBlank}"))
-     */
-
+    @NotBlank(message = "{NotBlank}")
     @Pattern(regexp = "^(?:[01]\\d|2[0-3]):[0-5]\\d$", message = "{Pattern.activityEndTime}") // hh:mm形式
     private String activityEndTime;
 
@@ -106,25 +87,28 @@ public class RegisterActivitySaveForm {
     }
 
     // 活動説明
-    /*
-     * TODO ➏ activityDescriptionに対し、バリデーションの条件を付与する
-     * 1.空白、nullを制御 (ヒント : @○○(message = "{NotBlank}"))
-     * 2.入力値制御(ヒント : @○○(max = ○○, message = "{Size}")
-     */
-
+    @NotBlank(message = "{NotBlank}")
+    @Size(max = 400, message = "{Size}")
     private String activityDescription;
 
     // 募集人数
-    /*
-     * TODO ➐ maxParticipantに対し、バリデーションの条件を付与する
-     * 1.空白、nullを制御 (ヒント : @○○(message = "{NotBlank}"))
-     * 2.最小値制御(ヒント : @○○(value = ○, message = "{Min}")
-     * 3.最大値制御(ヒント : @○○(value = ○○, message = "{Max}")
-     */
-
+    @NotBlank(message = "{NotBlank}")
     @Pattern(regexp = "^[0-9]*$", message = "{Pattern.maxParticipant}") // 半角数字
-
     private String maxParticipant;
+
+    // 募集人数の範囲チェック
+    @AssertTrue(message = "{AssertTrue.maxParticipantValid}")
+    public boolean isMaxParticipantValid() {
+        try {
+            if (maxParticipant != null && !maxParticipant.isEmpty()) {
+                int value = Integer.parseInt(maxParticipant);
+                return value >= 1 && value <= 100;
+            }
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
     private String message;
 
